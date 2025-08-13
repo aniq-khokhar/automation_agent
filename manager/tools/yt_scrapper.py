@@ -1,5 +1,8 @@
 from apify_client import ApifyClient
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 API_TOKEN = os.getenv("APIFY_API_TOKEN")
 client = ApifyClient(API_TOKEN)

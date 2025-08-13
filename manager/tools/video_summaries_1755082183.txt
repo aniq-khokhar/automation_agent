@@ -1,0 +1,19 @@
+VIDEO SUMMARIES REPORT
+==================================================
+
+VIDEO 1
+URL: https://www.tiktok.com/@example/video/1234567890
+File: N/A
+Status: failed
+Summary:
+Download failed
+--------------------------------------------------
+
+VIDEO 2
+URL: https://www.youtube.com/shorts/example123
+File: N/A
+Status: failed
+Summary:
+Download failed
+--------------------------------------------------
+
