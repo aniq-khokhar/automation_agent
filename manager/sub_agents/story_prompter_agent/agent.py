@@ -1,14 +1,14 @@
 from google.adk.agents import Agent
 from pydantic import BaseModel, Field
 
-
+from manager.sub_agents.prom_compiler_agent.agent import prom_compiler_agent
 
 
 story_prompter_agent = Agent(
     name="story_prompter_agent",
     model="gemini-2.0-flash",
     description=(
-        "Viral Video Analysis & Prompt Creation Agent"
+        "Multi-Step Viral Prompt Generator"
     ),
     instruction=(
         """
@@ -124,8 +124,6 @@ story_prompter_agent = Agent(
 
         """
     ),
-    tools=([]),
-    output_schema=(Prompt_content),
-    sub_agents=([]),
+    sub_agents=([prom_compiler_agent]),
 )
 

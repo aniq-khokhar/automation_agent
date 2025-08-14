@@ -219,18 +219,18 @@ def summarize_videos(video_urls: List[str]) -> Dict:
 
 
 # Example usage
-if __name__ == "__main__":
-    # Example video URLs - replace with your actual URLs
-    example_urls = [
-        "https://www.tiktok.com/@example/video/1234567890",
-        "https://www.youtube.com/shorts/example123",
-        "https://youtu.be/example123"
-    ]
-
-    # Process videos with a single function call
-    results = summarize_videos(example_urls)
-
-    # Print the JSON result
-    import json
-
-    print(json.dumps(results, indent=2))
+# if __name__ == "__main__":
+#     # Example video URLs - replace with your actual URLs
+#     example_urls = [
+#         "https://www.tiktok.com/@example/video/1234567890",
+#         "https://www.youtube.com/shorts/example123",
+#         "https://youtu.be/example123"
+#     ]
+#
+#     # Process videos with a single function call
+#     results = summarize_videos(example_urls)
+#
+#     # Print the JSON result
+#     import json
+#
+#     print(json.dumps(results, indent=2))
