@@ -1,6 +1,6 @@
 from google.adk.agents import Agent
 from google.adk.tools.agent_tool import AgentTool
-
+from .sub_agents.trend_analysis_agent.agent import trend_analysis_agent
 
 root_agent = Agent(
     name="manager",
@@ -36,6 +36,6 @@ root_agent = Agent(
     Use your best judgment to select the most appropriate agent based on the nature of the task. Always delegate.
         """
     ),
-    sub_agents=([]),
+    sub_agents=([trend_analysis_agent]),
     # tools=[get_weather, get_current_time]
 )

@@ -1,5 +1,14 @@
 from google.adk.agents import Agent
 from google.adk.tools.agent_tool import AgentTool
+from manager.tools import scrape_tiktok
+from manager.tools import yt_scrapper
+from manager.tools import summ_down
+from pydantic import BaseModel, Field
+
+class Output_content(BaseModel):
+    url: str = Field(description="The url of the video")
+    summary: str = Field(description="The whole summary of the video.")
+
 
 trend_analysis_agent = Agent(
     name="trend_analysis_agent",
@@ -55,8 +64,8 @@ trend_analysis_agent = Agent(
            - yt_scrapper with:
              {
                "sterm": "<niche_or_category>",
-               "short_c": 5,
-               "sorting": "POPULAR"
+               "short_c": 2,
+               "sorting": "NEWEST"
              }
            - scrape_tiktok with:
              {
@@ -82,13 +91,17 @@ trend_analysis_agent = Agent(
           "videos": [
             {
               "url": "<video_url>",
-              "title": "<video_title>",
-              "platform": "<youtube_or_tiktok>",
-              "duration": "<duration_in_seconds>",
+              "file": "<name of the file>",
               "summary": "<concise_summary_text>"
             },
             ...
           ]
+        }
+        
+        our response from summ_down MUST be valid JSON matching this structure:
+        {
+            "url": "<video_url>",
+            "summary": "<summary_of_the_video>"
         }
         
         Notes:
@@ -98,7 +111,8 @@ trend_analysis_agent = Agent(
 
         """
     ),
-    tools=([]),
+    tools=([scrape_tiktok,yt_scrapper, summ_down]),
+    output_schema= (Output_content),
     sub_agents=([]),
 )
 
