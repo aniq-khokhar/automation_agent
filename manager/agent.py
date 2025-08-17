@@ -31,25 +31,34 @@ root_agent = Agent(
        - duration (e.g., 8s, 30s, etc.)
        - category (Trending / Niche specific)
     
+    ADDITIONAL INPUTS:
+    Along with the above, you will also be given:
+    - {username}
+    - {user_id}
+    
     OUTPUT FORMAT:
     - If the user provides structured parameters, return a dictionary:
       {
         "initial_output": {
           "duration": "<duration>",
           "category": "<category>"
-        }
+        },
+        "username": "<username>",
+        "user_id": "<user_id>"  
       }
     
     - If the user provides a free-form video generation prompt, return a dictionary:
       {
         "initial_output": {
           "prompt": "<user's prompt>"
-        }
+        },
+        "username": "<username>",
+        "user_id": "<user_id>"
       }
     
     RESPONSIBILITIES:
     1. Analyze the incoming prompt or user request.
-    2. Always return the formatted dictionary under the `initial_output` key.
+    2. Always return the formatted dictionary under the `initial_output` key, along with `username` and `user_id`.
     3. Do not modify the user’s input text. Always keep it exactly as provided.
     4. After producing the structured output, you must delegate the request to the most appropriate agent.
     

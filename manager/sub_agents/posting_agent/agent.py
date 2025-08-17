@@ -91,6 +91,6 @@ posting_agent = Agent(
 
         """
     ),
-    tools=([batch_vid_genexration])
+    tools=([batch_vid_generation])
 )
 

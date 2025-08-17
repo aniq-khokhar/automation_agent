@@ -3,46 +3,45 @@ import io
 from google import genai
 from tempfile import NamedTemporaryFile
 from moviepy import VideoFileClip, concatenate_videoclips
+from google.genai.types import GenerateVideosConfig
 
 client = genai.Client()
 
 
-def vid_generation(prompt: str, timeout: int = 600) -> bytes:
+def vid_generation(prompt: str, userid: int, filename: str, bucket_name: str) -> str:
     """
-    Generate a video with Gemini's Veo model and return it as raw bytes.
+    Generate a video with Veo3 and save it directly to GCS.
 
     Args:
-        prompt (str): Text prompt for video generation.
-        timeout (int): Maximum wait time in seconds (default 10 min).
+        prompt (str): Prompt for the video.
+        userid (int): User ID (used as directory in GCS).
+        filename (str): Output filename.
+        bucket_name (str): GCS bucket name.
 
     Returns:
-        bytes: The generated video file content in memory.
+        str: GCS URI of the generated video.
     """
+
+    # Path where video will be stored in GCS
+    output_gcs_uri = f"gs://{bucket_name}/{userid}/{filename}"
+
+    # Request video generation
     operation = client.models.generate_videos(
-        model="veo-3.0-generate-preview",
-        prompt=prompt
+        model="veo-3.0-generate-001",
+        prompt=prompt,
+        config=GenerateVideosConfig(
+            aspect_ratio="16:9",
+            output_gcs_uri=output_gcs_uri,
+        ),
     )
 
-    start_time = time.time()
+    # Poll until the video is ready
     while not operation.done:
-        if time.time() - start_time > timeout:
-            raise TimeoutError("Video generation timed out.")
-        time.sleep(5)
+        time.sleep(15)
         operation = client.operations.get(operation)
 
-    if not operation.result or not operation.result.generated_videos:
-        raise RuntimeError("Video generation failed or returned no result.")
-
-    generated_video = operation.result.generated_videos[0]
-
-    # Download file directly into memory (bytes)
-    file_stream = io.BytesIO()
-    for chunk in client.files.download(file=generated_video.video):
-        file_stream.write(chunk)
-
-    file_stream.seek(0)  # Reset pointer to start
-
-    return file_stream.read()
+    # Return final GCS URI
+    return output_gcs_uri
 
 
 
