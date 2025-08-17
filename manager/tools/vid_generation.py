@@ -1,29 +1,49 @@
 import time
 import io
 from google import genai
-from google.genai import types
 from tempfile import NamedTemporaryFile
-import tempfile
 from moviepy import VideoFileClip, concatenate_videoclips
 
 client = genai.Client()
 
-def vid_generation(prompt: str) -> str:
+
+def vid_generation(prompt: str, timeout: int = 600) -> bytes:
+    """
+    Generate a video with Gemini's Veo model and return it as raw bytes.
+
+    Args:
+        prompt (str): Text prompt for video generation.
+        timeout (int): Maximum wait time in seconds (default 10 min).
+
+    Returns:
+        bytes: The generated video file content in memory.
+    """
     operation = client.models.generate_videos(
         model="veo-3.0-generate-preview",
         prompt=prompt
     )
 
-    # Wait until video is ready
+    start_time = time.time()
     while not operation.done:
-        time.sleep(20)
+        if time.time() - start_time > timeout:
+            raise TimeoutError("Video generation timed out.")
+        time.sleep(5)
         operation = client.operations.get(operation)
 
-    # Get the file reference for later download
-    generated_video = operation.result.generated_videos[0]
-    file_ref = generated_video.video.name  # Unique file identifier on Google's servers
+    if not operation.result or not operation.result.generated_videos:
+        raise RuntimeError("Video generation failed or returned no result.")
 
-    return file_ref
+    generated_video = operation.result.generated_videos[0]
+
+    # Download file directly into memory (bytes)
+    file_stream = io.BytesIO()
+    for chunk in client.files.download(file=generated_video.video):
+        file_stream.write(chunk)
+
+    file_stream.seek(0)  # Reset pointer to start
+
+    return file_stream.read()
+
 
 
 def batch_vid_generation(prompts: list[str]) -> list[str]:
