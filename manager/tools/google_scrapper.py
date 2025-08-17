@@ -7,12 +7,12 @@ load_dotenv()
 API_TOKEN = os.getenv("APIFY_API_TOKEN")
 client = ApifyClient(API_TOKEN)
 
-def fetch_trending_searches(country: str, timeframe: str):
+def google_scrapper(country: str, timeframe: str)-> list[dict]:
     """
     Fetch trending Google searches for a given category and timeframe.
 
     Args:
-        category (str): The category for trending searches (example: 'all', 'sports', 'business').
+        Country (str): The category for trending searches (example: 'all', 'sports', 'business').
         timeframe (str): Timeframe in hours or days (example: '24', '7d', '30d').
 
     Returns:
@@ -49,8 +49,8 @@ def fetch_trending_searches(country: str, timeframe: str):
 
     return results
 
-# Example usage:
-if __name__ == "__main__":
-    trending_data = fetch_trending_searches(country="US", timeframe="24")
-    for entry in trending_data:
-        print(entry)
+# # Example usage:
+# if __name__ == "__main__":
+#     trending_data = google_scrapper(country="US", timeframe="24")
+#     for entry in trending_data:
+#         print(entry)

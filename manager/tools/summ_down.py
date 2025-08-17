@@ -6,7 +6,6 @@ Silent version - returns JSON structure instead of console output
 """
 
 import os
-import sys
 import re
 import tempfile
 import shutil
@@ -14,7 +13,6 @@ import time
 from pathlib import Path
 import yt_dlp
 import google.generativeai as genai
-from typing import List, Dict
 from dotenv import load_dotenv
 
 # Configuration - Set your API key here
@@ -23,7 +21,7 @@ load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")  # Replace with your actual API key
 
 
-def summarize_videos(video_urls: List[str]) -> Dict:
+def summ_down(video_urls: list[str]) -> dict:
     """
     Download videos from TikTok/YouTube and generate AI summaries
 
@@ -126,7 +124,7 @@ def summarize_videos(video_urls: List[str]) -> Dict:
             except Exception as e:
                 return None
 
-        def summarize_video(self, video_path: str, url: str) -> Dict[str, str]:
+        def summarize_video(self, video_path: str, url: str) -> dict[str, str]:
             """Generate video summary using Gemini 2.0 Flash"""
             try:
                 # Upload video to Gemini
@@ -178,7 +176,7 @@ def summarize_videos(video_urls: List[str]) -> Dict:
             except Exception as e:
                 pass
 
-        def process(self, video_urls: List[str]) -> Dict:
+        def process(self, video_urls: list[str]) -> dict:
             """Main processing function"""
             if not video_urls:
                 return {"videos": []}
@@ -219,18 +217,18 @@ def summarize_videos(video_urls: List[str]) -> Dict:
 
 
 # Example usage
-# if __name__ == "__main__":
-#     # Example video URLs - replace with your actual URLs
-#     example_urls = [
-#         "https://www.tiktok.com/@example/video/1234567890",
-#         "https://www.youtube.com/shorts/example123",
-#         "https://youtu.be/example123"
-#     ]
-#
-#     # Process videos with a single function call
-#     results = summarize_videos(example_urls)
-#
-#     # Print the JSON result
-#     import json
-#
-#     print(json.dumps(results, indent=2))
+if __name__ == "__main__":
+    # Example video URLs - replace with your actual URLs
+    example_urls = [
+        "https://www.tiktok.com/@example/video/1234567890",
+        "https://www.youtube.com/shorts/example123",
+        "https://youtu.be/example123"
+    ]
+
+    # Process videos with a single function call
+    results = summ_down(example_urls)
+
+    # Print the JSON result
+    import json
+
+    print(json.dumps(results, indent=2))

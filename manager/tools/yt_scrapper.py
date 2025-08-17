@@ -7,7 +7,7 @@ load_dotenv()
 API_TOKEN = os.getenv("APIFY_API_TOKEN")
 client = ApifyClient(API_TOKEN)
 
-def yt_scrapper(s_term: str, sorting: str, short_c: int = 2):
+def yt_scrapper(s_term: str, sorting: str, short_c: int = 2)-> list[dict]:
     """
     Scrapes YouTube videos using Apify Actor.
 
@@ -56,8 +56,9 @@ def yt_scrapper(s_term: str, sorting: str, short_c: int = 2):
     return results
 
 
-# Example usage
-if __name__ == "__main__":
-    data = yt_scrapper("Gaming", 5, "POPULAR")
-    for video in data:
-        print(video)
+
+# # Example usage
+# if __name__ == "__main__":
+#     data = yt_scrapper("Gaming", 5, "POPULAR")
+#     for video in data:
+#         print(video)

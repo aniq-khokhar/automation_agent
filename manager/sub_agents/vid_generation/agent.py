@@ -1,5 +1,4 @@
 from google.adk.agents import Agent
-from pydantic import BaseModel, Field
 from manager.tools.vid_generation import vid_generation
 
 vid_generation = Agent(

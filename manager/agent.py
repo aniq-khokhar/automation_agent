@@ -30,6 +30,7 @@ root_agent = Agent(
     2. Structured parameters for video generation, which include:
        - duration (e.g., 8s, 30s, etc.)
        - category (Trending / Niche specific)
+       - region (Geographical target region, e.g., 'US', 'UK', 'PK', 'IN', 'CA')
     
     ADDITIONAL INPUTS:
     Along with the above, you will also be given:
@@ -41,7 +42,8 @@ root_agent = Agent(
       {
         "initial_output": {
           "duration": "<duration>",
-          "category": "<category>"
+          "category": "<category>",
+          "region"  : "<region>"
         },
         "username": "<username>",
         "user_id": "<user_id>"  

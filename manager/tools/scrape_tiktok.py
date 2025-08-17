@@ -41,16 +41,16 @@ def scrape_tiktok(category: str, region: str, results_per_page: int = 3) -> list
     results = []
     for item in client.dataset(run["defaultDatasetId"]).iterate_items():
         results.append({
-            "description": item.get("text", ""),
-            "views": item.get("playCount", 0),
-            "link": item.get("webVideoUrl", "")
+            "title": item.get("text", ""),
+            "url": item.get("webVideoUrl", ""),
+            "viewCount": item.get("playCount", 0)
         })
 
     return results
 
 
-# Example usage
-if __name__ == "__main__":
-    data = scrape_tiktok("gaming", "US", 5)
-    print(data)
-
+# # Example usage
+# if __name__ == "__main__":
+#     data = scrape_tiktok("gaming", "US", 5)
+#     print(data)
+#
