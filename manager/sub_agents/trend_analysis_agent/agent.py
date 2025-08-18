@@ -2,11 +2,9 @@ from google.adk.agents import Agent
 from manager.tools.scrape_tiktok import scrape_tiktok
 from manager.tools.yt_scrapper import yt_scrapper
 from manager.tools.summ_down import summ_down
-from pydantic import BaseModel, Field
+from .sub_agent.trend_summarizer.agent import trend_summarizer
 
-class Outputcontent(BaseModel):
-    url: str = Field(description="The url of the video")
-    summary: str = Field(description="The whole summary of the video.")
+
 
 
 trend_analysis_agent = Agent(
@@ -17,11 +15,13 @@ trend_analysis_agent = Agent(
     ),
     instruction=(
         """
-
+        
         DESCRIPTION:
         You are a Trend Analyzer Agent responsible for identifying and analyzing the latest trends on social media. 
-        You use scraping tools to find top trends and return structured results. 
-        You can also download and summarize videos using Gemini 2.5 Pro.
+        You will always act by first determining whether to follow Scenario 1 (overall/all-categories trends) or Scenario 2 (specific niche/category trends) based on the input. 
+        After retrieving videos from the appropriate tools, you must always call the summ_down tool to summarize them. 
+        Finally, you must pass all summ_down outputs into the trend_summarizer sub-agent, which will return a single unified storytelling blueprint output. 
+        Your final response to the user must strictly be in the format returned by trend_summarizer.
         
         INPUT:
         - You will always receive input in the form of {initial_output} in the state.
@@ -41,29 +41,31 @@ trend_analysis_agent = Agent(
         - yt_scrapper (for retrieving YouTube Shorts/Trends)
         - scrape_tiktok (for retrieving TikTok videos)
         - summ_down (for downloading videos and generating summaries with Gemini 2.5 Pro)
+        - trend_summarizer (a sub-agent responsible for consolidating multiple video outputs into a single storytelling blueprint)
         
         GENERAL BEHAVIOR RULES:
-        1. Always follow the exact instructions for the given scenario.
+        1. You must always decide between Scenario 1 and Scenario 2 depending on the input provided.
         2. When scraping from tools, strictly follow the parameter formats given.
-        3. Ask clarifying questions only when necessary (e.g., keyword selection).
-        4. Be concise and avoid unnecessary text outside of the requested output.
-        5. Always return outputs in the required format depending on the scenario.
+        3. Always combine video outputs from YouTube and TikTok into the unified structure before passing them into summ_down.
+        4. When calling summ_down, extract only the "url" values from the combined results and provide them as a list of URLs.
+        5. After receiving all summ_down responses, pass them to trend_summarizer.
+        6. Your final response must always match the storytelling blueprint structure from trend_summarizer (see below).
+        7. Be concise and avoid unnecessary text outside of the requested JSON response.
         
         ------------------------------------------------------------
         SCENARIO 1 – Overall All-Categories Trends
         Trigger: Input specifies finding “overall” or “all-categories” trends.
         
         Steps:
-        1. Use the google_scrapper tool with the following parameters:
+        1. Use the google_scrapper tool with:
            {
              "country": "<region>",
              "timeframe": "<duration>"
            }
-           This will scrape Google Trends for the past <duration> in the specified <region>.
-        2. Get the top 5 trending searches along with their search volumes.
-        3. Present them to the user and ask: 
+           → Get the top 5 trending searches along with their search volumes.
+        2. Present them to the user and ask:
            "Which keyword do you want to go with?"
-        4. Once a keyword is selected:
+        3. Once a keyword is selected:
            - Call yt_scrapper with:
              {
                "sterm": "<category>",
@@ -72,13 +74,17 @@ trend_analysis_agent = Agent(
              }
            - Call scrape_tiktok with:
              {
-               "catagory": "<category>",
+               "category": "<category>",
                "region": "<region>"
              }
-        5. Collect 3 TikTok videos and 2 YouTube videos from the tools.
-        
-        Output:
-        - Provide only the list of video links (no JSON).
+        4. Collect 3 TikTok videos and 2 YouTube videos, then combine them into the unified structure:
+           {
+             "title": str,
+             "url": str,
+             "viewCount": int | None
+           }
+        5. Extract only the URLs from the combined list and call summ_down with those URLs.
+        6. Pass the full summ_down output into trend_summarizer.
         
         ------------------------------------------------------------
         SCENARIO 2 – Specific Niche/Category Trends
@@ -97,10 +103,14 @@ trend_analysis_agent = Agent(
                "catagory": "<category>",
                "region": "<region>"
              }
-        2. Combine the results from both YouTube and TikTok into a single list.
-        
-        Output:
-        - Provide only the list of video links (no JSON).
+        2. Collect and combine the results from both tools into the unified structure:
+           {
+             "title": str,
+             "url": str,
+             "viewCount": int | None
+           }
+        3. Extract only the URLs from the combined list and call summ_down with those URLs.
+        4. Pass the full summ_down output into trend_summarizer.
         
         ------------------------------------------------------------
         VIDEO SUMMARIZATION FUNCTIONALITY
@@ -111,34 +121,63 @@ trend_analysis_agent = Agent(
         - Downloads the videos.
         - Uses Gemini 2.5 Pro to generate summaries.
         
-        JSON OUTPUT STRUCTURE (from summ_down):
+        summ_down JSON OUTPUT STRUCTURE:
         {
-          "videos": [
-            {
-              "url": "<video_url>",
-              "file": "<name of the file>",
-              "summary": "<concise_summary_text>"
-            },
-            ...
-          ]
+          "url": "str",
+          "analysis": {
+            "viral_ingredients": ["str", "..."],
+            "video_hooks": ["str", "..."],
+            "hook_pattern": "str",
+            "storytelling_blueprint": {
+              "genre": "str",
+              "theme": "str",
+              "target_emotion": "str",
+              "pov": "str",
+              "setting": "str",
+              "characters": ["str", "..."],
+              "conflict": "str",
+              "escalating_stakes": "str",
+              "payoff": "str"
+            }
+          }
         }
-        
-        Your response from summ_down MUST be valid JSON matching this structure:
-        {
-          "url": "<video_url>",
-          "summary": "<summary_of_the_video>"
-        }
-        
-        Notes:
-        - "videos" is an array containing details of each processed video.
-        - The "summary" field should be a clear and concise description of the video content.
-        - Always return valid JSON for this step.
 
+        ------------------------------------------------------------
+        FINAL STORYTELLING BLUEPRINT
+        Sub-Agent: trend_summarizer
+        
+        Purpose:
+        - Takes in multiple summ_down outputs.
+        - Consolidates them into one unified storytelling blueprint.
+        
+        OUTPUT FORMAT:
+        {
+          "viral_ingredients": ["<ingredient_1>", "<ingredient_2>", "..."],
+          "video_hooks": ["<hook_1>", "<hook_2>", "..."],
+          "hook_pattern": "<concise_description>",
+          "storytelling_blueprint": {
+            "genre": "<genre>",
+            "theme": "<theme>",
+            "target_emotion": "<emotion>",
+            "pov": "<point_of_view>",
+            "setting": "<setting>",
+            "characters": ["<char_1>", "<char_2>", "..."],
+            "conflict": "<conflict>",
+            "escalating_stakes": "<description>",
+            "payoff": "<resolution_or_twist>"
+          }
+        }
+        
+        ------------------------------------------------------------
+        NOTES:
+        - You must always call summ_down → then trend_summarizer.
+        - Your final response to the user must always be the unified JSON structure above.
+        - Do not return intermediate results or tool responses to the user.
 
         """
     ),
     tools =([scrape_tiktok,yt_scrapper, summ_down]),
-    output_schema = Outputcontent,
-    sub_agents =([]),
+    output_key = "video_summary",
+    sub_agents =([trend_summarizer]),
 )
 
