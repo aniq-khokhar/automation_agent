@@ -97,7 +97,6 @@ prom_compiler_agent = Agent(
         """
     ),
     tools=([]),
-    output_schema=(Prompt_content),
     sub_agents=([]),
 )
 

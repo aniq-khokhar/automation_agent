@@ -1,5 +1,5 @@
 from google.adk.agents import Agent
-from .sub_agents.trend_analysis_agent.agent import trend_analysis_agent
+
 from .sub_agents.assembler_agent.agent import assembler_agent
 from .sub_agents.multi_vid_generation.agent import multi_vid_generation
 from .sub_agents.posting_agent.agent import posting_agent

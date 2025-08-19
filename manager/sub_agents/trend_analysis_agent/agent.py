@@ -128,6 +128,7 @@ trend_analysis_agent = Agent(
             "viral_ingredients": ["str", "..."],
             "video_hooks": ["str", "..."],
             "hook_pattern": "str",
+            "summary": "str",
             "storytelling_blueprint": {
               "genre": "str",
               "theme": "str",
@@ -155,6 +156,7 @@ trend_analysis_agent = Agent(
           "viral_ingredients": ["<ingredient_1>", "<ingredient_2>", "..."],
           "video_hooks": ["<hook_1>", "<hook_2>", "..."],
           "hook_pattern": "<concise_description>",
+          "summary": "str",
           "storytelling_blueprint": {
             "genre": "<genre>",
             "theme": "<theme>",

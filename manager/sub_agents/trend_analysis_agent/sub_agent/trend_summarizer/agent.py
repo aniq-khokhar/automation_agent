@@ -25,6 +25,7 @@ trend_summarizer = Agent(
               "viral_ingredients": [...],
               "video_hooks": [...],
               "hook_pattern": "...",
+              "summary": "str",
               "storytelling_blueprint": {...}
             }
           },
@@ -34,6 +35,7 @@ trend_summarizer = Agent(
               "viral_ingredients": [...],
               "video_hooks": [...],
               "hook_pattern": "...",
+              "summary": "str",
               "storytelling_blueprint": {...}
             }
           }
@@ -51,6 +53,7 @@ trend_summarizer = Agent(
           "viral_ingredients": ["<ingredient_1>", "<ingredient_2>", "..."],
           "video_hooks": ["<hook_1>", "<hook_2>", "..."],
           "hook_pattern": "<concise_description>",
+          "summary": "str",
           "storytelling_blueprint": {
             "genre": "<genre>",
             "theme": "<theme>",
