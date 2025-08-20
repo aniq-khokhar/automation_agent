@@ -1,4 +1,6 @@
 from google.adk.agents import Agent
+from manager.tools.vid_generation import vid_generation
+
 
 s_vid_generation = Agent(
     name="s_vid_generation",
@@ -103,6 +105,8 @@ s_vid_generation = Agent(
 
         """
     ),
+    tools=([vid_generation]),
     output_key="s_video_link",
 )
+
 

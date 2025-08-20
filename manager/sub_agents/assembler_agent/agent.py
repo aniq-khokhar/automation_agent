@@ -1,14 +1,13 @@
 from google.adk.agents import Agent
-from pydantic import BaseModel, Field
 
-from manager.tools.vid_generation import vid_compiler
+
 
 
 assembler_agent = Agent(
     name="assembler_agent",
     model="gemini-2.0-flash",
     description=(
-        "Video Compiler agent"
+        "Multiple Videos Compiler agent"
     ),
     instruction=(
         """

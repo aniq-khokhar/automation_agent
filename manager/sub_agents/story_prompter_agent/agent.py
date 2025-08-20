@@ -1,7 +1,5 @@
 from google.adk.agents import Agent
-from pydantic import BaseModel, Field
 
-from manager.sub_agents.prom_compiler_agent.agent import prom_compiler_agent
 
 
 story_prompter_agent = Agent(
@@ -137,10 +135,8 @@ story_prompter_agent = Agent(
         ]
         ```
         
-
-
         """
     ),
-    sub_agents=([prom_compiler_agent]),
+    output_key= "story_prompt"
 )
 
