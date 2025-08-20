@@ -17,6 +17,9 @@ vid_generation = Agent(
         Your task is to generate a video from a given prompt and return structured outputs in strict JSON format.
         
         INPUT:
+        
+        {initial_output}
+        
         - You will always receive input in the form of {initial_output} in the state.
         - Example:
           {
@@ -59,6 +62,6 @@ vid_generation = Agent(
         """
     ),
     tools =([vid_generation]),
-    output_key= "s_video_link"
+    output_key= "d_video_link"
 )
 
