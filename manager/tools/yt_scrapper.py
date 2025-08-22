@@ -58,7 +58,7 @@ def yt_scrapper(s_term: str, sorting: str, short_c: int = 2)-> list[dict]:
 
 
 # # Example usage/
-if __name__ == "__main__":
-    data = yt_scrapper("Gaming", "POPULAR" , 2)
-    for video in data:
-        print(video)
+# if __name__ == "__main__":
+#     data = yt_scrapper("Gaming", "POPULAR" , 2)
+#     for video in data:
+#         print(video)
