@@ -1,5 +1,4 @@
 from google.adk.agents import Agent
-from manager.tools.scrape_tiktok import scrape_tiktok
 
 combine_out = Agent(
     name="combine_out",

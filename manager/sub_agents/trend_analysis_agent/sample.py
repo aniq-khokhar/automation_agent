@@ -2,6 +2,8 @@ from google.adk.agents import Agent
 # from .sub_agent.summ_down.agent import
 from .sub_agent.trend_summarizer.agent import trend_summarizer
 
+
+
 trend_analysis_agent = Agent(
     name="trend_analysis_agent",
     model="gemini-2.0-flash",
@@ -37,7 +39,7 @@ trend_analysis_agent = Agent(
           "username": "<username>",
           "user_id": "<user_id>"
         }
-        TOOLS & SUB-AGENTS:
+        SUB-AGENTS:
         google_scrapper → Retrieves top 5 trending searches for a region.
         
         yt_scrapper → Fetches YouTube trending videos.
@@ -100,8 +102,7 @@ trend_analysis_agent = Agent(
         Call summ_down with:
         
         {
-          "urls": ["<url1>", "<url2>", "..."],
-          "titles": ["<title1>", "<title2>", "..."]
+          "urls": ["<url1>", "<url2>", "..."]
         }
         Response: {summaries}
         
