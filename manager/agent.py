@@ -68,14 +68,13 @@ root_agent = Agent(
     - vid_generation
     - assembler_agent
     - posting_agent
-    - single_prompter_agent
     - story_prompter_agent
     - trend_analysis_agent
     - video_generation_agent
 
         """
     ),
-    sub_agents=([vid_generation,trend_analysis_agent,single_prompter_agent,story_prompter_agent,
+    sub_agents=([vid_generation,trend_analysis_agent,story_prompter_agent,
                  prom_compiler_agent,vid_generation,multi_vid_generation,assembler_agent,posting_agent]),
     output_key = "initial_output"
 )
